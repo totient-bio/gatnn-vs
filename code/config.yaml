@@ -1,0 +1,48 @@
+hydra:
+  run:
+    dir: ./outputs/${rundir}
+seed: 42
+# data: /data/shared/luka/gattn-data-size-test/hts_fp_141.v3.feather
+# data: /data/shared/boysha/gattn/test.feather
+# data: /data/shared/luka/paper/hts_fp_128-no_muv.feather
+# data: /data/shared/luka/paper/hts_fp_128.feather
+# targets_prefix: Status_
+#data: /data/shared/luka/paper/pubchem_train_ds_229.v1.feather
+data: /data/shared/luka/paper/pubchem_train_ds_235.v3.feather
+targets_prefix: aid_
+rundir: ???
+num_classes: 235 
+train_split: 0.9
+device: "cuda:0"
+batch_size: 256
+net:
+  gattn_emb: 32
+  gattn_heads: 16
+  final_emb: 2048
+  dropout: 0.3
+# embed:
+#   checkpoint: "/data/shared/boysha/gatnn-vs/code/outputs/adam03-e2048-nomuv/checkpoints/31.last_10.torch"
+#   input: "/data/shared/luka/paper/all_benchmark_datasets.csv"
+#   output: mols.npy
+#   insert_nans: No
+#   use_last_layer: No
+train:
+  optim: AdamW
+  batch_size: 256
+  epochs: 30
+  metric_freq: 200
+  start_swa: 20
+  n_swa: 10
+  keep_swa: 10
+  lr: 1e-3
+  pos_class_weight: 8.0
+  wd:
+    pre_cycle: 2e-2
+    post_cycle: 2e-2
+  cycle:
+    enabled: No
+    base_lr: 1e-3
+    max_lr: 1e-2
+    momentum: No
+    epochs_up: 15
+    epochs_down: 15
