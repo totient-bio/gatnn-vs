@@ -4,7 +4,7 @@ setup(
     version="1.0",
     packages=find_packages(),
     install_requires=[
-        "pytorch>=1.4", "dgl>=0.4.0", "rdkit", 
+        "torch>=1.4", "dgl>=0.4.0", "rdkit", 
         "tqdm", "hydra-core", "omegaconf", "pandas", "cytoolz", "feather-format"],
 
     # metadata to display on PyPI
