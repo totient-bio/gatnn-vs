@@ -4,8 +4,7 @@ GATNN-VS is a neural network architecture, and a learning framework designed to 
 
 Checkout our paper: [Improved Scaffold Hopping in Ligand-based Virtual Screening Using Neural Representation Learning](#)
 
-<img width="70%" src="https://github.com/totient-bio/gatnn-vs/raw/master/images/gatnn-screening.png" alt="GATTN Virtual Screen Visualization">
-
+![GATTN Virtual Screen Visualization](https://github.com/totient-bio/gatnn-vs/raw/master/images/gatnn-screening.png)
 
 ## Instalation
 
