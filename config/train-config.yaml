@@ -2,12 +2,6 @@ hydra:
   run:
     dir: ./outputs/${rundir}
 seed: 42
-# data: /data/shared/luka/gattn-data-size-test/hts_fp_141.v3.feather
-# data: /data/shared/boysha/gattn/test.feather
-# data: /data/shared/luka/paper/hts_fp_128-no_muv.feather
-# data: /data/shared/luka/paper/hts_fp_128.feather
-# targets_prefix: Status_
-#data: /data/shared/luka/paper/pubchem_train_ds_229.v1.feather
 data: /data/shared/luka/paper/pubchem_train_ds_235.v3.feather
 targets_prefix: aid_
 rundir: ???
@@ -20,13 +14,8 @@ net:
   gattn_heads: 16
   final_emb: 2048
   dropout: 0.3
-# embed:
-#   checkpoint: "/data/shared/boysha/gatnn-vs/code/outputs/adam03-e2048-nomuv/checkpoints/31.last_10.torch"
-#   input: "/data/shared/luka/paper/all_benchmark_datasets.csv"
-#   output: mols.npy
-#   insert_nans: No
-#   use_last_layer: No
 train:
+  # Optimizer: AdamW or LambW
   optim: AdamW
   batch_size: 256
   epochs: 30

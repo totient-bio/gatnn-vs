@@ -1,0 +1,34 @@
+# Graph Attention Neural Network for Virtual Screening
+
+GATNN-VS is a neural network architecture, and a learning framework designed to yield a generally applicable tool for ligand-based virtual screening. Our approach uses the molecular graph as input, and involves learning a representation that places compounds of similar biological profiles in close proximity within a hyperdimensional feature space; this is achieved by simultaneously leveraging historical screening data against a multitude of targets during training. Cosine distance between molecules in this space becomes a general similarity metric, and can readily be used to rank order database compounds in LBVS workflows
+
+Checkout our paper: Improved Scaffold Hopping in Ligand-based Virtual Screening Using Neural Representation Learning
+
+<img width="70%" src="https://github.com/totient-bio/gatnn-vs/raw/master/images/gattn-screening.png" alt="GATTN Virtual Screen Visualization">
+
+## Requirements
+
+Project uses following dependencies:
+
+* *pytorch*
+* *dgl* - for graph handlind
+* *rdkit* - molecule processing, scoring functions
+* Several utility packages: *tqdm*, *hydra-core", "omegaconf", "pandas", "cytoolz"
+
+
+
+## Instalation
+
+## Weights
+
+## Training
+
+## Usage
+
+## License
+
+Code and pretrained models are licenced under [GNU GPL v3 License](LICENSE).
+
+## Citation
+
+Pending publication
