@@ -3,13 +3,13 @@ setup(
     name="GAtNN-VS",
     version="1.0",
     packages=find_packages(),
-    install_requires=["pytorch>=1.4", "dgl>=0.4.0", "rdkit", "tqdm", "hydra-core", "omegaconf", "pandas", "cytoolz"],
+    install_requires=["pytorch>=1.4", "dgl>=0.4.0", "rdkit", "tqdm", "hydra-core", "omegaconf", "pandas", "cytoolz", "feather-format"],
 
     # metadata to display on PyPI
-    author="Me",
+    author="Totient Inc",
     author_email="me@example.com",
     description="This is an Example Package",
-    keywords="graph attention neural network chemistry virtual screen",
+    keywords="graph,attention,neural network,chemistry,virtual screen",
     url="https://github.com/totient-bio/gatnn-vs",
     project_urls={
         "Bug Tracker": "https://github.com/totient-bio/gatnn-vs/issues",
@@ -18,7 +18,7 @@ setup(
     },
     data_files = [("config", ["train-config.yaml"])]
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Environment :: GPU :: NVIDIA CUDA",
         "Intended Audience :: Science/Research",

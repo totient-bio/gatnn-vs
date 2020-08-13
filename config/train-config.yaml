@@ -2,7 +2,7 @@ hydra:
   run:
     dir: ./outputs/${rundir}
 seed: 42
-data: /data/shared/luka/paper/pubchem_train_ds_235.v3.feather
+data: ???
 targets_prefix: aid_
 rundir: ???
 num_classes: 235 
