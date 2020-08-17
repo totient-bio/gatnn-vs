@@ -15,7 +15,11 @@ Project uses following dependencies:
 * *rdkit* - molecule processing
 * Several utility packages: *tqdm*, *hydra-core*, *omegaconf*, *pandas*, *cytoolz*, *feather-format*
 
-Please make sure the first three dependencies are installed and working; just pip installing them probably isn't enough. The easyest way would be through [conda](https://www.anaconda.com/products/individual) package manager.
+Please make sure the first three dependencies are installed and working; just pip installing them
+ probably isn't enough (rdkit doesn't even have a pip package). The easyest way would be through 
+ [conda]
+ (https://www.anaconda
+ .com/products/individual) package manager.
 
 Once the environment is set up, you can install GATNN-VS with pip:
 
