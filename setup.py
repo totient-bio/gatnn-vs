@@ -18,7 +18,7 @@ setup(
         "Documentation": "https://github.com/totient-bio/gatnn-vs",
         "Source Code": "https://github.com/totient-bio/gatnn-vs",
     },
-    package_data = {"": ["config/*.yaml"]},
+    include_package_data=True,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
