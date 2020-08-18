@@ -1,1 +1,1 @@
-include config/*yaml
+include gatnnvs/*.yaml

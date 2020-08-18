@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 setup(
-    name="GAtNN-VS",
+    name="gattnvs",
     version="1.0",
     packages=find_packages(),
     install_requires=[
