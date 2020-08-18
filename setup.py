@@ -5,7 +5,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "torch>=1.4", "dgl>=0.4.0",  # "rdkit", - there is no pip package
-        "tqdm", "hydra-core", "omegaconf", "pandas", "cytoolz", "feather-format"],
+        "tqdm", "hydra-core", "pandas", "cytoolz", "feather-format"],
 
     # metadata to display on PyPI
     author="Totient inc.",
