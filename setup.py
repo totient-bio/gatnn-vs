@@ -5,11 +5,11 @@ setup(
     packages=find_packages(),
     install_requires=[
         "torch>=1.4", "dgl>=0.4.0",  # "rdkit", - there is no pip package
-        "tqdm", "hydra-core", "pandas", "cytoolz", "feather-format"],
+        "tqdm", "hydra-core", "pandas", "cytoolz", "feather-format", "tensorboard"],
 
     # metadata to display on PyPI
     author="Totient inc.",
-    author_email="me@example.com",
+    author_email="opensource@totient.bio",
     description="Neural network based virtual screening toolkit",
     keywords="graph,attention,neural network,chemistry,virtual screen",
     url="https://github.com/totient-bio/gatnn-vs",
