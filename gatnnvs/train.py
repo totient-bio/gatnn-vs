@@ -210,7 +210,7 @@ def run(cfg):
     eval_writer.close()
     swa_writer.close()
             
-@hydra.main(config_path="../config/train-config.yaml")
+@hydra.main(config_path="train-config.yaml")
 def main(cfg):
     log.info(cfg.pretty())
     run(cfg)

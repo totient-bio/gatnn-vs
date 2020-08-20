@@ -1,0 +1,9 @@
+pretrained_model_url: 'https://totient-pretrained.s3.amazonaws.com/gatnn-vs/gatnn-model-final.tar.gz'
+model_path: '${env:HOME}/.local/share/gatnnvs/gatnn-model-final'
+device:
+input: ???
+output:
+batch_size: 256
+hydra:
+  run:
+    dir: .

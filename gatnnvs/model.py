@@ -1,5 +1,5 @@
-import itertools
-from torch import nn
+from pathlib import Path
+from omegaconf import OmegaConf
 from gatnnvs.modules import *
 
 
@@ -28,3 +28,23 @@ def build_model(gattn_emb, gattn_heads, final_emb, num_classes, device, dropout=
         Linear(final_emb, num_classes, bias=True)
     )
     return net.to(device)
+
+
+def load_model(model_path, device=None):
+    mp = Path(model_path)
+    model_cfg = OmegaConf.load(str(mp / 'config' / 'config.yaml'))
+    net = build_model(
+        model_cfg.net.gattn_emb,
+        model_cfg.net.gattn_heads,
+        model_cfg.net.final_emb,
+        model_cfg.num_classes,
+        device=device,
+        dropout=model_cfg.net.dropout,
+    )
+
+    weights_path = mp / 'weights.torch'
+    weights = torch.load(str(weights_path))
+    net.load_state_dict(weights['model'])
+    del net[-1]
+
+    return net

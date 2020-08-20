@@ -1,17 +1,16 @@
-import sys
 import logging
 import hydra
-from omegaconf import OmegaConf
 import torch
-import itertools
+import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from pathlib import Path
 from rdkit.Chem import AllChem
 
-from gatnnvs.model import build_model
+from gatnnvs.model import build_model, load_model
 from gatnnvs.dataset import GraphDataset, make_graph_batch, is_mol_usable
+from gatnnvs.pretrained import ensure_model
 
 log = logging.getLogger(__name__)
 
@@ -20,24 +19,11 @@ def desalt_smiles(smi):
     return max(smi.split('.'), key=len) if '.' in smi else smi
 
 
-def run(cfg, rundir, epoch, infile, outfile):
-    ## Build model and load checkpoint
-    device = torch.device(cfg.device)
-    net = build_model(
-        cfg.net.gattn_emb, 
-        cfg.net.gattn_heads, 
-        cfg.net.final_emb, 
-        cfg.num_classes, 
-        device=device,
-        dropout=cfg.net.dropout,
-    )
+def run(net, device, batch_size, infile, outfile):
+
     num_params = sum([p.numel() for p in net.parameters()])
     log.info(f'Parameter count: {num_params}')
 
-    checkpoint = Path(rundir) / 'checkpoints' / f'{epoch}.last_10.torch'
-    checkpoint = torch.load(str(checkpoint))
-    net.load_state_dict(checkpoint['model'])
-    del net[-1]
 
     ## Load dataset
     data = pd.read_table(infile, sep=',')[['smiles']]
@@ -50,7 +36,7 @@ def run(cfg, rundir, epoch, infile, outfile):
     
     loader = torch.utils.data.DataLoader(
         GraphDataset(usable, embed_only=True), 
-        batch_size=cfg.batch_size, 
+        batch_size=batch_size,
         shuffle=False, 
         num_workers=0, 
         collate_fn=make_graph_batch
@@ -70,14 +56,23 @@ def run(cfg, rundir, epoch, infile, outfile):
     np.save(outfile, outs)
 
 
-def main(rundir, epoch, inp, out):
-    cfg = OmegaConf.load(str(Path(rundir)  / '.hydra' / 'config.yaml'))
+@hydra.main(config_path="embed-config.yaml")
+def main(cfg):
     log.info(cfg.pretty())
-    run(cfg, rundir, epoch, inp, out)
+    inp = Path(cfg.input)
+    device = cfg.device
+    if not device:
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        device = torch.device(device)
+
+    ensure_model(cfg.model_path)
+    net = load_model(cfg.model_path, device)
+
+    out = cfg.output
+    if not out:
+        out = inp.stem
+    run(net, device, cfg.batch_size, inp, out)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print('Usage: embed.py <rundir> <epoch> <input> <output>')
-        sys.exit(1)
-    main(*sys.argv[1:])
+    main()

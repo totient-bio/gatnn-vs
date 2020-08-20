@@ -26,23 +26,7 @@ def get_metrics(predictions, actual, mask, prefix=''):
         metrics_for_target(pred, lbl, msk.squeeze())
         for pred, lbl, msk in zip(individual_preds, individual_actual, individual_mask)
     ])
-#     target_ord = np.argsort(individual_scores, axis=0)
-#     percentiles = {
-#         'min_': target_ord[0],
-#         '5_': target_ord[int(0.05 * num_classes)],
-#         '25_': target_ord[int(0.25 * num_classes)],
-#         '50_': target_ord[int(0.5 * num_classes)],
-#         '75_': target_ord[int(0.75 * num_classes)],
-#         '95_': target_ord[int(0.95 * num_classes)],
-#         'max_': target_ord[num_classes - 1]
-#     }
 
-# #     histograms = {prefix + 'ef_hist': individual_scores[:, :].flatten()}
-#     metrics = {
-#         prefix + perc + k: individual_scores[targets[i]][i]
-#         for perc, targets in percentiles.items()
-#         for i, k in enumerate(keys)
-#     }
     means = np.mean(individual_scores, axis=0)
     metrics = {
         prefix + 'mean_' + k: means[i] for i, k in enumerate(keys)
