@@ -1,9 +1,9 @@
 pretrained_model_url: 'https://totient-pretrained.s3.amazonaws.com/gatnn-vs/gatnn-model-final.tar.gz'
 model_path: '${env:HOME}/.local/share/gatnnvs/gatnn-model-final'
-device:
-input: ???
+device: cpu
+query: ???
+library: ???
 output:
-batch_size: 256
 hydra:
   run:
     dir: .
@@ -33,16 +33,16 @@ hydra:
       ${hydra.help.header}
       Usage:
 
-      python3 -m gatnnvs.${hydra.job.name} input=INPUT [Options...]
+      python3 -m gatnnvs.${hydra.job.name} query=QUERY library=LIBRARY [Options...]
 
       == Config ==
       Override anything in the config (foo.bar=value)
 
-      input: Input csv file with (at least) a 'smiles' column.
+      query: Input csv file with (at least) a 'smiles' column.
+      library: npy file with generated fingerprints
       model_path: Directory where model weights and config is located.
           Defaults to ${env:HOME}/.local/share/gatnnvs/gatnn-model-final where pretrained model will be automatically downloaded if necessary.
-      device: Defaults to CUDA if available.
-      output: Name of the output file, derived from input if omited.
-      batch_size: Defaults to 256.
+      device: Defaults to CPU, as it is expected that number of query molecules is small.
+      output: Name of the output file, derived from query if omited.
 
       ${hydra.help.footer}

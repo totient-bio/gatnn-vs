@@ -71,7 +71,7 @@ def run(cfg):
     if len(targets) > cfg.num_classes:
         targets = rng.choice(targets, cfg.num_classes)
     
-    ## Build model and load latest checkpoint if resuming
+    # Build model and load latest checkpoint if resuming
     i, start_epoch = -1, 1
     device = torch.device(cfg.device)
     net = build_model(
@@ -120,7 +120,6 @@ def run(cfg):
         train_ds, drop_last=True, batch_size=cfg.batch_size, shuffle=True, num_workers=4, collate_fn=make_graph_batch)
     eval_loader = torch.utils.data.DataLoader(
         eval_ds, batch_size=cfg.batch_size, shuffle=False, num_workers=4, collate_fn=make_graph_batch)
-
 
     train_log = Path('train')
     eval_log = Path('eval')

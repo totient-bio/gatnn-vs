@@ -52,6 +52,9 @@ class GraphCast(nn.Module):
     
 
 class Linear(nn.Linear):
+    """
+    A linear layer with tuned initialization params
+    """
     def __init__(self, in_features, out_features, bias=True, init=ct.curry(nn.init.xavier_normal_)(gain=1.414)):
         self.init = init
         super().__init__(in_features, out_features, bias)
@@ -116,7 +119,8 @@ class GraphLambda(nn.Module):
         if self.edge_key:
             g.edata[self.edge_key] = self.fn(g.edata[self.edge_key])
         return g
-    
+
+
 ReduceMean = lambda: GraphLambda(lambda x: x.mean(dim=-2))
 ReduceCat = lambda: GraphLambda(lambda x: x.view(x.shape[0], -1))
 
@@ -225,12 +229,12 @@ class MagicAttn(nn.Module):
             init=ct.curry(nn.init.xavier_normal_)(gain=nn.init.calculate_gain('leaky_relu', alpha)))
         self.leaky_relu = nn.LeakyReLU(alpha)
         self.n_heads = n_heads
-#         self.softmax = EdgeSoftmax.apply
         self.attn_key = attn_key
         self.msg_key = msg_key
         
     def forward(self, g):
         alpha_prime = self.leaky_relu(self.attn(g.edata[self.attn_key]))
+        # Magic part is multiplying attention weights with the edge embedding
         g.edata['a'] = dglnn.edge_softmax(g, alpha_prime) * g.edata['emb'].view(g.edata['emb'].shape[0], self.n_heads, -1)
         attn_emb = g.ndata[self.msg_key]
         if attn_emb.ndimension() == 2:
@@ -281,10 +285,10 @@ class ValidBCELoss(nn.Module):
         return valid.mean()
 
     
-def AttnBlock(in_emb, out_emb, gattn_emb, gattn_heads, bias=False):
+def AttnBlock(in_emb, gattn_emb, gattn_heads, bias=False):
     return nn.Sequential(
-        EdgeLinear(in_emb, out_emb),
-        NodeLinear(in_emb, out_emb),
+        EdgeLinear(in_emb, gattn_emb * gattn_heads),
+        NodeLinear(in_emb, gattn_emb * gattn_heads),
         GraphLambda(lambda x: x.view(x.shape[0], gattn_heads, -1)),
         TripletCat(out='triplet'),
         MagicAttn(gattn_emb, 3 * gattn_emb, gattn_heads, attn_key='triplet'),
@@ -294,5 +298,5 @@ def AttnBlock(in_emb, out_emb, gattn_emb, gattn_heads, bias=False):
     )
 
 
-def gr(emb, heads):
-    return GatedResidual(AttnBlock(emb * heads, emb * heads, emb, heads), emb * heads, emb * heads)
+def GRAttnBlock(emb, heads):
+    return GatedResidual(AttnBlock(emb * heads, emb, heads), emb * heads, emb * heads)

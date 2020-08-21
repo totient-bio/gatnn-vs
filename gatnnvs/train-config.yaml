@@ -1,6 +1,8 @@
 hydra:
   run:
     dir: ./outputs/${rundir}
+  help:
+    app_name: GAtNN-VS
 seed: 42
 data: ???
 targets_prefix: aid_
@@ -17,7 +19,6 @@ net:
 train:
   # Optimizer: AdamW or LambW
   optim: AdamW
-  batch_size: 256
   epochs: 30
   metric_freq: 200
   start_swa: 20

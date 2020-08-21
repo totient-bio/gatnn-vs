@@ -1,7 +1,6 @@
 import logging
 import hydra
 import torch
-import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -31,7 +30,6 @@ def run(net, device, batch_size, infile, outfile):
     data['usable'] = data.mol.map(is_mol_usable)
     usable = data[data.usable].reset_index(drop=True)
     skipped = data[~data.usable].index.values
-#     skipped.tofile('skipped.csv', sep=',')
     log.info(f'Usable: {len(usable)}\t Unusable: {len(data[~data.usable])}')
     
     loader = torch.utils.data.DataLoader(
@@ -63,7 +61,7 @@ def main(cfg):
     device = cfg.device
     if not device:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        device = torch.device(device)
+    device = torch.device(device)
 
     ensure_model(cfg.model_path)
     net = load_model(cfg.model_path, device)

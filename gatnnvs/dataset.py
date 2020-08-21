@@ -46,7 +46,7 @@ def make_dglg(mol):
     return g
 
 
-class GraphDataset():
+class GraphDataset:
     def __init__(self, df, mol_column='mol', target_columns=None, embed_only=False):
         self.df = df
         self.mol_column = mol_column
