@@ -107,7 +107,7 @@ net = nn.Sequential(
  
 ```
 
-When `emb_input_size == emb_out_size` you can use skip connections. There are `Residual` and `GatedResidual` modules implemented for graph, as well as `GRAttnBlock` that wrap regular `AttnBlock` with gated connections:
+When `emb_input_size == emb_out_size` you can use skip connections. There are `Residual` and `GatedResidual` modules implemented for graphs, as well as `GRAttnBlock` that wraps regular `AttnBlock` with gated connections:
 
 ```python
 from gatnnvs.modules import Embed, GraphAttnPool, GraphLambda, AttnBlock, GRAttnBlock, Linear
@@ -191,7 +191,7 @@ if epoch > cfg.train.start_swa:
 
 ### LambW optimizer
 
-Changes weight decay handling of Lamb optimizer similar to, analog to Adam -> AdamW. In some tests, it was slightly better than AdamW, although not used for final model.
+Changes weight decay handling of Lamb optimizer analog to Adam -> AdamW. In some tests, it was slightly better than AdamW, although not used for final model.
 
 ```python
 from gatnnvs.optim import LambW
