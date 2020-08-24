@@ -60,7 +60,7 @@ class GraphDataset:
         mol = self.df.loc[idx, self.mol_column]
         g = make_dglg(mol)
         if not hasattr(self, 'actives'):
-            return g, torch.zeros(1), torch.zeros(1)
+            return g
         a = torch.tensor(self.actives[idx], dtype=torch.float32)
         v = torch.tensor(self.valids[idx], dtype=torch.float32)
         return g, a, v

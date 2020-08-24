@@ -74,9 +74,81 @@ If provided with existing **rundir**, it will automatically resume training from
 
 ## Using GAtNN-VS from code
 
+### Screening using pretrained model
+
+You can download pretrained model from `https://totient-pretrained.s3.amazonaws.com/gatnn-vs/gatnn-model-final.tar.gz` and extract it, or use a function `ensure_model`
+
+```python
+from gatnnvs.pretrained import ensure_model
+
+ensure_model()
+```
+
+This function will download into `$HOME/.local/share/gatnvs` if not already present there.
+
+Once you have model weights you can load the model:
+
+```python
+from gatnnvs.model import load_model
+
+net = load_model()
+```
+
+You can pass path of the model directory, if it isn't in the default location. The above function will automatically remove the last layer that predicts training targets, so the result of the `net(g)` will be a molecular fingerprint.
+
+Finally, you can generate some fingerprints and score their similarity:
+
+```python
+import dgl
+import torch
+import pandas as pd
+import numpy as np
+from rdkit.Chem import AllChem
+from gatnnvs.embed import desalt_smiles
+from gatnnvs.dataset import GraphDataset, is_mol_usable
+from gatnnvs.model import load_model
+from gatnnvs.screen import vscreen_np
+
+
+# read some smiles from a file
+data = pd.read_csv(infile)[['smiles']]
+data['mol'] = data.smiles.map(lambda s: AllChem.MolFromSmiles(desalt_smiles(s)))
+data['usable'] = data.mol.map(is_mol_usable)
+usable = data[data.usable].reset_index(drop=True)
+skipped = data[~data.usable].index.values
+
+loader = torch.utils.data.DataLoader(
+    GraphDataset(usable, embed_only=True), 
+    batch_size=500,
+    shuffle=False, 
+    num_workers=0, 
+    collate_fn=dgl.batch
+)
+
+# generate fingerprints
+net = load_model()
+embs = []
+with torch.no_grad():
+    for g in loader:
+        g.to(device)
+        out = net(g)
+        embs.append(out.detach().cpu().numpy())
+embs = np.concatenate(embs)
+
+# calculate cosines between them
+
+query = embs[:5, :]
+haystack = embs[5:, :]
+
+scores = vscreen_np(query, haystack)
+
+```
+
+'**scores**' will be a numpy array of shape (len(hastack), len(query)).
+
 ### Building a network
 
-The main building block is an `AttnBlock` module:
+You can also experiment with the network architecture and train your own model. The main building block is an `AttnBlock` module:
 
 ```python
 from gatnnvs.modules import Embed, GraphAttnPool, GraphLambda, AttnBlock, Linear
@@ -139,7 +211,7 @@ net = nn.Sequential(
 
 ### Training
 
-It is expected that the available data is sparse, that is that not every molecule has known activity. That's why a `GraphDataset` class returns a triplet: `(graph, active, valid)`, and a loss function masks out all invalid datapoints from loss calculation:
+It is expected that the available data is sparse, that is that not every molecule has known activity for every target. That's why a `GraphDataset` class returns a triplet: `(graph, active, valid)`, and a loss function masks out all invalid datapoints from loss calculation:
 
 ```python
 from gatnnvs.dataset import GraphDataset, make_graph_batch

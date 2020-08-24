@@ -31,7 +31,12 @@ def build_model(gattn_emb, gattn_heads, final_emb, num_classes, device, dropout=
     return net.to(device)
 
 
-def load_model(model_path, device=None):
+def load_model(model_path=None, device=None):
+
+    if model_path is None:
+        embed_cfg = OmegaConf.load(__file__ + '/../embed-config.yaml')
+        model_path = embed_cfg.model_path
+
     mp = Path(model_path)
     model_cfg = OmegaConf.load(str(mp / 'config' / 'config.yaml'))
     net = build_model(

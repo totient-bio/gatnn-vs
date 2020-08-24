@@ -3,6 +3,7 @@ import hydra
 import torch
 import numpy as np
 import pandas as pd
+import dgl
 from tqdm import tqdm
 from pathlib import Path
 from rdkit.Chem import AllChem
@@ -37,14 +38,13 @@ def run(net, device, batch_size, infile, outfile):
         batch_size=batch_size,
         shuffle=False, 
         num_workers=0, 
-        collate_fn=make_graph_batch
+        collate_fn=dgl.batch
     )
 
     net.eval()
     outs = []
     with torch.no_grad():
-        for batch in tqdm(loader):
-            g, a, v = batch
+        for g in tqdm(loader):
             g.to(device)
             out = net(g)
             outs.append(out.detach().cpu().numpy())
